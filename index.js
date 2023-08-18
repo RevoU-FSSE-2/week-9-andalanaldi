@@ -1,80 +1,60 @@
 /*
 
 Requirements :
-- show user info with user's order total amount
-- add person
-- add order
-- delete order
+- show user info with user's total balance = total income - total expense
+- add income / expense transaction
+- update income / expense transaction
+- delete income / expense transaction
 
 Contracts :
 
-GET /persons : show all user
-{
-    "sucess": true,
-    "data": [
-        {
-            "id": 1,
-            "name": "budi",
-            "gender": "male",
-            "department": "IT"
-        },
-        {
-            "id": 2,
-            "name": "ani",
-            "gender": "female",
-            "department": "HR"
-        }
-    ],
-    "error": {}
-}
-
-GET /persons/:id : show one user by id
+GET /users/:id : show one client by id
 response
 {
     "success": true,
     "data":{
         {
             "id": 1,
-            "name": "budi",
-            "gender": "male",
-            "department": "IT"
-            "amount": 100000
+            "name": "Albert",
+            "address": "Jakarta",
+            "Balance": 100000, 
+            "expense": 5000 
         }
 }
 
-POST /persons : add person
+POST /transactions : add income / expense transaction
 {
-    "name": "andi",
-    "gender": "male",
-    "department": "HR"    
+    "type": "income",
+    "amount": 5000,
+    "user_id": 1    
 }
 
 {
     "success": true,
     "data": {
-        "id": 1 // order id
+        "id": 1 // transaction id
     }
 }
 
-POST /orders : add order
+PUT /transactions/:id : add transaction
 {
-    "user_id": 1,
-    "price": 900,
-    "product": "tablet"    
+    "type": "income",
+    "amount": 5000,
+    "user_id": 1      
 }
 
 {
     "success": true,
     "data": {
-        "id": 1 // order id
+        "id": 1 // transaction id
     }
 }
 
-DELETE /orders/:id : delete order
+DELETE /transactions/:id : delete transactions
 {
     "success": true,
     "data": {
-        "id": 1 // order id
+        "id": 1 // transaction id
     }
 }
 
@@ -140,8 +120,8 @@ mysqlCon.connect((err) => {
 
 app.use(bodyParser.json())
 
-app.get('/persons', (req, res) => {
-    mysqlCon.query("select * from revou.person", (err, result, fields) => {
+app.get('/users', (req, res) => {
+    mysqlCon.query("select * from revou.user", (err, result, fields) => {
       if (err){
         console.log(err)
         res.status(500).json(commonResponse(null, "server error"))
@@ -155,9 +135,10 @@ app.get('/persons', (req, res) => {
     })
 })
 
-app.get('/persons/:id', async (req, res) => {
+app.get('/users/:id', async (req, res) => {
   try{
         const id = req.params.id
+        const type= req.params.type
         const userKey = "user:"+id
         const cacheData = await redisCon.hgetall(userKey)
     
@@ -170,19 +151,19 @@ app.get('/persons/:id', async (req, res) => {
         //console.log("this wants to target revou database")
     
         const dbData = await query(`select
-                p.id,
-                p.name, 
-                p.gender, 
-                p.department, 
-                sum(o.price) as amount
+                u.id,
+                u.name, 
+                u.address,  
+                sum(t.amount) as balance,
+                sum(t.type) as expense
             from 
-                revou.person as p
-                left join revou.order as o
-                on p.id = o.person_id
+                revou.users as u
+                left join revou.transaction as t
+                on u.id = t.transaction
             where 
-                p.id = 6
+                u.id = 1
             group by 
-                p.id`, id)
+                u.id t.type`, id, type)
         
         await redisCon.hset(userKey, dbData[0])
         await redisCon.expire(userKey, 20)
@@ -198,19 +179,19 @@ app.get('/persons/:id', async (req, res) => {
 
 })
 
-app.post('/persons', (req, res) => {
+app.post('/users', (req, res) => {
     
 })
 
-app.post('/orders', (req, res) => {
+app.post('/transactions', (req, res) => {
     const body = req.body
 
     mysqlCon.query(`
     insert into
-        revou.order (person_id, price, product)
+        revou.transaction (user_id, type, amount)
     values
     (?, ?, ?)
-    `, [body.user_id, body.price, body.product], (err, result, fields) => {
+    `, [body.user_id, body.type, body.amount], (err, result, fields) => {
         if (err){
             console.log(err)
             res.status(500).json(commonResponse(null, "server error"))
@@ -225,9 +206,26 @@ app.post('/orders', (req, res) => {
     })
 })
 
-app.delete('/orders/:id', (req, res) => {
+app.put('/transactions/:id', (req, res) => {
+    // const id = req.params.id  
+    const idIndex = data_1.id.findIndex(item => item.id === parseInt(req.params.id))
+    if (idIndex !== -1) {
+        data_1.id[idIndex] = Object.assign(Object.assign({}, data_1.id[idIndex]), req.body)
+        res.json({
+            message: "Success updating transaction",
+            id: data_1.id[idIndex],
+        })
+    }
+    else {
+        res.status(404).json({
+            message: "transaction not found",
+        })
+    }
+})
+
+app.delete('/transactions/:id', (req, res) => {
     const id = req.params.id  
-    mysqlCon.query("delete from revou.order where id = ?", id, (err, result, fields) => {
+    mysqlCon.query("delete from revou.transaction where id = ?", id, (err, result, fields) => {
         if (err){
             console.log(err)
             res.status(500).json(commonResponse(null, "server error"))
