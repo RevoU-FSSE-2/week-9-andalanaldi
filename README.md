@@ -117,7 +117,7 @@ The other part of codes in Javascript are mostly similar with week 9 day 4 lectu
 
 3. Successfully connect Database into Node JS
 
-Author successfully connected Database into Node.js. Not only that, it also connected into postman for testing GET, POST, PUT and DELETE (CRUD) methods. The screenshots will be attached if there is time left to do that.
+Author successfully connected Database into Node.js. Not only that, it also connected into postman for testing GET, POST, PUT and DELETE (CRUD) methods.
 
 #### Database to Node JS Connection
 ![proof](https://github.com/RevoU-FSSE-2/week-9-andalanaldi/blob/main/W9-Assignment-Screenshots/successfully%20connected%20mysql%20and%20nodejs.JPG/?raw=true)
@@ -145,14 +145,14 @@ Author successfully connected Database into Node.js. Not only that, it also conn
 #### DELETE effect on database
 ![proof](https://github.com/RevoU-FSSE-2/week-9-andalanaldi/blob/main/W9-Assignment-Screenshots/DELETE%20effect%20on%20user_id%202.JPG/?raw=true)
 
-4. Successfully connect redis into MySQL and Node JS and make cache before MySQL
+4. Successfully connect Redis into MySQL and Node JS and make cache before MySQL
 #### Redis
 ![proof](https://github.com/RevoU-FSSE-2/week-9-andalanaldi/blob/main/W9-Assignment-Screenshots/Redis.JPG/?raw=true)
 
 #### Get Cache
 ![proof](https://github.com/RevoU-FSSE-2/week-9-andalanaldi/blob/main/W9-Assignment-Screenshots/get_cache.JPG/?raw=true)
 
-Author successfully connected those things too. Nevertheless, if there is enough time to share the screenshots. Author will do that.
+Author successfully connected Redis into Database and Node JS.
 ## Deployment Process
 
 SImilar with week 8, First things first make sure to sign up on fly.io and modify billing via dashboard menu and add debit card number, thru date and cvc so that fly.io hobby plan could be used to deploy the Node JS app. Author has Visa Debit Card with IDR first double digits balance used for this because, when Author used a Master Card Debit with lower balance, the fly.io said the balance is insufficent so then it could not be used for deployment. If the fly.io configuration process is done the please do these steps:  
