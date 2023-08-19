@@ -119,7 +119,35 @@ The other part of codes in Javascript are mostly similar with week 9 day 4 lectu
 
 Author successfully connected Database into Node.js. Not only that, it also connected into postman for testing GET, POST, PUT and DELETE (CRUD) methods. The screenshots will be attached if there is time left to do that.
 
+#### Database to Node JS Connection
+![proof](https://github.com/RevoU-FSSE-2/week-9-andalanaldi/blob/main/W9-Assignment-Screenshots/successfully%20connected%20mysql%20and%20nodejs.JPG/?raw=true)
+
+#### GET by id
+![proof](https://github.com/RevoU-FSSE-2/week-9-andalanaldi/blob/main/W9-Assignment-Screenshots/GET.JPG/?raw=true)
+
+#### Passed POST
+![proof](https://github.com/RevoU-FSSE-2/week-9-andalanaldi/blob/main/W9-Assignment-Screenshots/POST%20pass.JPG/?raw=true)
+
+#### Error POST
+![proof](https://github.com/RevoU-FSSE-2/week-9-andalanaldi/blob/main/W9-Assignment-Screenshots/POST%20fail.JPG/?raw=true)
+
+#### PUT by id 
+![proof](https://github.com/RevoU-FSSE-2/week-9-andalanaldi/blob/main/W9-Assignment-Screenshots/PUT.JPG/?raw=true)
+
+#### PUT effect on database
+![proof](https://github.com/RevoU-FSSE-2/week-9-andalanaldi/blob/main/W9-Assignment-Screenshots/PUT%20effect%20on%20user_id%202.JPG/?raw=true)
+
+#### DELETE by id
+![proof](https://github.com/RevoU-FSSE-2/week-9-andalanaldi/blob/main/W9-Assignment-Screenshots/DELETE.JPG/?raw=true)
+
+#### DELETE with unavailable id
+![proof](https://github.com/RevoU-FSSE-2/week-9-andalanaldi/blob/main/W9-Assignment-Screenshots/DELETE%20with%20no%20available%20id.JPG/?raw=true)
+#### DELETE effect on database
+![proof](https://github.com/RevoU-FSSE-2/week-9-andalanaldi/blob/main/W9-Assignment-Screenshots/DELETE%20effect%20on%20user_id%202.JPG/?raw=true)
+
 4. Successfully connect redis into MySQL and Node JS and make cache before MySQL
+#### Redis
+![proof](https://github.com/RevoU-FSSE-2/week-9-andalanaldi/blob/main/W9-Assignment-Screenshots/Redis.JPG/?raw=true)
 
 Author successfully connected those things too. Nevertheless, if there is enough time to share the screenshots. Author will do that.
 ## Deployment Process
