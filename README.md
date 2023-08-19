@@ -149,6 +149,9 @@ Author successfully connected Database into Node.js. Not only that, it also conn
 #### Redis
 ![proof](https://github.com/RevoU-FSSE-2/week-9-andalanaldi/blob/main/W9-Assignment-Screenshots/Redis.JPG/?raw=true)
 
+#### Get Cache
+![proof](https://github.com/RevoU-FSSE-2/week-9-andalanaldi/blob/main/W9-Assignment-Screenshots/get_cache.JPG/?raw=true)
+
 Author successfully connected those things too. Nevertheless, if there is enough time to share the screenshots. Author will do that.
 ## Deployment Process
 
