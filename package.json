@@ -19,6 +19,7 @@
     "pnpm": "^8.6.12"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.4.6",
     "nodemon": "^3.0.1"
   }
 }
