@@ -138,7 +138,7 @@ app.get('/users', (req, res) => {
 app.get('/users/:id', async (req, res) => {
   try{
         const id = req.params.id
-        const type= req.params.type
+        // const type= req.params.type
         const userKey = "user:"+id
         const cacheData = await redisCon.hgetall(userKey)
     
@@ -154,17 +154,20 @@ app.get('/users/:id', async (req, res) => {
                 u.id,
                 u.name, 
                 u.address,  
-                sum(t.amount) as balance,
-                sum(t.type) as expense
+                sum(case when t.type = 'income' then t.amount else 0 end) as total_income,
+                sum(case when t.type = 'expense' then t.amount else 0 end) as total_expense
             from 
                 revou.users as u
                 left join revou.transaction as t
-                on u.id = t.transaction
+                on u.id = t.user_id
             where 
-                u.id = 1
+                u.id = ?
             group by 
-                u.id t.type`, id, type)
+                u.id`, id)
         
+        const userBalance = dbData[0].total_income - dbData[0].total_expense
+        dbData[0].balance = userBalance
+
         await redisCon.hset(userKey, dbData[0])
         await redisCon.expire(userKey, 20)
                 
@@ -206,22 +209,24 @@ app.post('/transactions', (req, res) => {
     })
 })
 
-app.put('/transactions/:id', (req, res) => {
-    // const id = req.params.id  
-    const idIndex = data_1.id.findIndex(item => item.id === parseInt(req.params.id))
-    if (idIndex !== -1) {
-        data_1.id[idIndex] = Object.assign(Object.assign({}, data_1.id[idIndex]), req.body)
-        res.json({
-            message: "Success updating transaction",
-            id: data_1.id[idIndex],
-        })
-    }
-    else {
-        res.status(404).json({
-            message: "transaction not found",
-        })
+app.put('/transactions/:id', async (req, res) => {
+    const id = req.params.id
+    const { type, amount } = req.body
+
+    try {
+        await query(`
+            update revou.transaction
+            set type = ?, amount = ?
+            where id = ?
+        `, [type, amount, id])
+
+        res.status(200).json(commonResponse({ id }, null))
+    } catch (err) {
+        console.log(err)
+        res.status(500).json(commonResponse(null, "server error"))
     }
 })
+
 
 app.delete('/transactions/:id', (req, res) => {
     const id = req.params.id  
