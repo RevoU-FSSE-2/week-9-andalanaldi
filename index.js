@@ -157,7 +157,7 @@ app.get('/users/:id', async (req, res) => {
                 sum(case when t.type = 'income' then t.amount else 0 end) as total_income,
                 sum(case when t.type = 'expense' then t.amount else 0 end) as total_expense
             from 
-                revou.users as u
+                revou.client as u
                 left join revou.transaction as t
                 on u.id = t.user_id
             where 
@@ -191,10 +191,10 @@ app.post('/transactions', (req, res) => {
 
     mysqlCon.query(`
     insert into
-        revou.transaction (user_id, type, amount)
+        revou.transaction (type, amount, user_id)
     values
     (?, ?, ?)
-    `, [body.user_id, body.type, body.amount], (err, result, fields) => {
+    `, [body.type, body.amount, body.user_id], (err, result, fields) => {
         if (err){
             console.log(err)
             res.status(500).json(commonResponse(null, "server error"))
