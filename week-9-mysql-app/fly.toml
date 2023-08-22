@@ -1,0 +1,27 @@
+# fly.toml app configuration file generated for withered-meadow-9422 on 2023-08-22T09:15:04+07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "withered-meadow-9422"
+kill_signal = "SIGINT"
+kill_timeout = 5
+
+primary_region = "sin"
+
+[processes]
+app = "--datadir /data/mysql --default-authentication-plugin mysql_native_password --performance-schema=OFF --innodb-buffer-pool-size 64M"
+
+[mounts]
+  source="mysqldata"
+  destination="/data"
+
+[env]
+  MYSQL_DATABASE = "some_db"
+  MYSQL_USER = "non_root_user"
+
+# As of 04/25/2023:
+# MySQL 8.0.33 has a bug in it
+# so avoid that specific version
+[build]
+  image = "mysql:8.0.32"

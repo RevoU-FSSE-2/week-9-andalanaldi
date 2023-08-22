@@ -63,10 +63,10 @@ DELETE /transactions/:id : delete transactions
 const express = require('express')
 const mysql = require('mysql2')
 const bodyParser = require('body-parser')
-//
-const redis = require('ioredis')
 
 const app = express()
+
+const port = 3000
 
 const commonResponse = function(data, error){
     if(error){
@@ -83,16 +83,23 @@ const commonResponse = function(data, error){
     }
 }
 
-const redisCon = new redis({
-    host: 'localhost',
-    port: 6379
-})
-
 const mysqlCon = mysql.createConnection({
-    host: 'localhost',
-    port: 3306,
+    // success to be deployed when redis codes still exist
+    // fail to be deployed when redis is gone
+    // host: '0.0.0.0', 
+    // port: 3000,
+    // success to be deployed
+    // host: '2a09:8280:1::5b:5b80',
+    // port: 3306,
+    // host: 'localhost',
+    // port: 3306,
+    // fail to be deployed
+    // host: '127.0.0.1',
+    // port: 3306,
+    // fail to be deployed
+    host: 'fdaa:2:c0b9:a7b:81:3866:2a26:2',
     user: 'root',
-    password: 'RevoUmysql123',
+    password: 'password',
     database: 'revou'
 })
 
@@ -138,18 +145,7 @@ app.get('/users', (req, res) => {
 app.get('/users/:id', async (req, res) => {
   try{
         const id = req.params.id
-        // const type= req.params.type
-        const userKey = "user:"+id
-        const cacheData = await redisCon.hgetall(userKey)
-    
-        if(Object.keys(cacheData).length !== 0){
-        console.log("get data from cache")
-        res.status(200).json(commonResponse(cacheData, null))
-        res.end()
-        return
-        }
-        //console.log("this wants to target revou database")
-    
+
         const dbData = await query(`select
                 u.id,
                 u.name, 
@@ -167,9 +163,6 @@ app.get('/users/:id', async (req, res) => {
         
         const userBalance = dbData[0].total_income - dbData[0].total_expense
         dbData[0].balance = userBalance
-
-        await redisCon.hset(userKey, dbData[0])
-        await redisCon.expire(userKey, 20)
                 
         res.status(200).json(commonResponse(dbData[0], null))
         res.end()
@@ -251,6 +244,6 @@ app.delete('/transactions/:id', (req, res) => {
     })
 })
 
-app.listen(3000, () => {
-    console.log("running in 3000")
+app.listen(port, () => {
+    console.log(`running at http://localhost:${port}`)
 })
